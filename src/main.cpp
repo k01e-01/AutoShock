@@ -13,6 +13,8 @@
 #include "wifi/WiFiManager.h"
 #include "wifi/WiFiScanManager.h"
 
+#include "extension/ExtensionManager.h"
+
 #include <Arduino.h>
 
 #include <memory>
@@ -46,6 +48,11 @@ bool trySetup() {
 
   if (!OpenShock::GatewayConnectionManager::Init()) {
     ESP_LOGE(TAG, "Unable to initialize GatewayConnectionManager");
+    return false;
+  }
+
+  if (!OpenShock::ExtensionManager::Init()) {
+    ESP_LOGE(TAG, "Unable to initialize ExtensionManager");
     return false;
   }
 
@@ -96,6 +103,7 @@ void main_app(void* arg) {
     OpenShock::CaptivePortal::Update();
     OpenShock::GatewayConnectionManager::Update();
     OpenShock::WiFiManager::Update();
+    OpenShock::ExtensionManager::Update();
 
     vTaskDelay(5);  // 5 ticks update interval
   }
