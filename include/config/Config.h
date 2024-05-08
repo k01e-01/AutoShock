@@ -7,6 +7,8 @@
 #include "config/SerialInputConfig.h"
 #include "config/WiFiConfig.h"
 #include "config/WiFiCredentials.h"
+#include "config/ExtensionConfig.h"
+
 #include "StringView.h"
 
 #include <functional>
@@ -79,4 +81,7 @@ namespace OpenShock::Config {
   bool GetBackendLCGOverride(std::string& out);
   bool SetBackendLCGOverride(StringView lcgOverride);
   bool ClearBackendLCGOverride();
+
+  bool GetExtensionModulesConfig(std::string& out);
+  bool SetExtensionModulesConfig(StringView config);
 }  // namespace OpenShock::Config

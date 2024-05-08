@@ -12,6 +12,7 @@ void RootConfig::ToDefault() {
   captivePortal.ToDefault();
   backend.ToDefault();
   serialInput.ToDefault();
+  extension.ToDefault();
 }
 
 bool RootConfig::FromFlatbuffers(const Serialization::Configuration::Config* config) {
@@ -50,6 +51,11 @@ bool RootConfig::FromFlatbuffers(const Serialization::Configuration::Config* con
     return false;
   }
 
+  if (!extension.FromFlatbuffers(config->extension())) {
+    ESP_LOGE(TAG, "Unable to extension config");
+    return false;
+  }
+
   return true;
 }
 
@@ -60,8 +66,9 @@ flatbuffers::Offset<OpenShock::Serialization::Configuration::Config> RootConfig:
   auto backendOffset       = backend.ToFlatbuffers(builder, withSensitiveData);
   auto serialInputOffset   = serialInput.ToFlatbuffers(builder, withSensitiveData);
   auto otaUpdateOffset     = otaUpdate.ToFlatbuffers(builder, withSensitiveData);
+  auto extensionOffset     = extension.ToFlatbuffers(builder, withSensitiveData);
 
-  return Serialization::Configuration::CreateConfig(builder, rfOffset, wifiOffset, captivePortalOffset, backendOffset, serialInputOffset, otaUpdateOffset);
+  return Serialization::Configuration::CreateConfig(builder, rfOffset, wifiOffset, captivePortalOffset, backendOffset, serialInputOffset, otaUpdateOffset, extensionOffset);
 }
 
 bool RootConfig::FromJSON(const cJSON* json) {
@@ -105,6 +112,11 @@ bool RootConfig::FromJSON(const cJSON* json) {
     return false;
   }
 
+  if (!extension.FromJSON(cJSON_GetObjectItemCaseSensitive(json, "extension"))) {
+    ESP_LOGE(TAG, "Unable to load extension config");
+    return false;
+  }
+
   return true;
 }
 
@@ -117,6 +129,7 @@ cJSON* RootConfig::ToJSON(bool withSensitiveData) const {
   cJSON_AddItemToObject(root, "backend", backend.ToJSON(withSensitiveData));
   cJSON_AddItemToObject(root, "serialInput", serialInput.ToJSON(withSensitiveData));
   cJSON_AddItemToObject(root, "otaUpdate", otaUpdate.ToJSON(withSensitiveData));
+  cJSON_AddItemToObject(root, "extension", extension.ToJSON(withSensitiveData));
 
   return root;
 }

@@ -100,6 +100,11 @@ table OtaUpdateConfig {
   update_step:OtaUpdateStep;
 }
 
+table ExtensionConfig {
+  /// Plaintext json configuration for all extension modules
+  pt_modules_config:string;
+}
+
 table Config {
   /// RF Transmitter configuration
   rf:RFConfig;
@@ -118,4 +123,7 @@ table Config {
 
   /// OTA update configuration
   ota_update:OtaUpdateConfig;
+
+  /// Extensions configuration
+  extension:ExtensionConfig;
 }

@@ -6,6 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { BackendConfig } from '../../../open-shock/serialization/configuration/backend-config';
 import { CaptivePortalConfig } from '../../../open-shock/serialization/configuration/captive-portal-config';
+import { ExtensionConfig } from '../../../open-shock/serialization/configuration/extension-config';
 import { OtaUpdateConfig } from '../../../open-shock/serialization/configuration/ota-update-config';
 import { RFConfig } from '../../../open-shock/serialization/configuration/rfconfig';
 import { SerialInputConfig } from '../../../open-shock/serialization/configuration/serial-input-config';
@@ -78,8 +79,16 @@ otaUpdate(obj?:OtaUpdateConfig):OtaUpdateConfig|null {
   return offset ? (obj || new OtaUpdateConfig()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Extensions configuration
+ */
+extension(obj?:ExtensionConfig):ExtensionConfig|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new ExtensionConfig()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startConfig(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 }
 
 static addRf(builder:flatbuffers.Builder, rfOffset:flatbuffers.Offset) {
@@ -104,6 +113,10 @@ static addSerialInput(builder:flatbuffers.Builder, serialInputOffset:flatbuffers
 
 static addOtaUpdate(builder:flatbuffers.Builder, otaUpdateOffset:flatbuffers.Offset) {
   builder.addFieldOffset(5, otaUpdateOffset, 0);
+}
+
+static addExtension(builder:flatbuffers.Builder, extensionOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, extensionOffset, 0);
 }
 
 static endConfig(builder:flatbuffers.Builder):flatbuffers.Offset {

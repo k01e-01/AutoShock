@@ -739,3 +739,26 @@ bool Config::ClearBackendLCGOverride() {
   _configData.backend.lcgOverride.clear();
   return _trySaveConfig();
 }
+
+bool Config::GetExtensionModulesConfig(std::string& out) {
+  ScopedReadLock lock(&_configMutex);
+  if (!lock.isLocked()) {
+    ESP_LOGE(TAG, "Failed to acquire read lock");
+    return false;
+  }
+
+  out = _configData.extension.ptModulesConfig;
+
+  return true;
+}
+
+bool Config::SetExtensionModulesConfig(StringView config) {
+  ScopedWriteLock lock(&_configMutex);
+  if (!lock.isLocked()) {
+    ESP_LOGE(TAG, "Failed to acquire write lock");
+    return false;
+  }
+
+  _configData.extension.ptModulesConfig = config.toString();
+  return _trySaveConfig();
+}

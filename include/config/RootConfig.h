@@ -8,6 +8,8 @@
 #include "config/SerialInputConfig.h"
 #include "config/WiFiConfig.h"
 
+#include "config/ExtensionConfig.h"
+
 namespace OpenShock::Config {
   struct RootConfig : public ConfigBase<Serialization::Configuration::Config> {
     OpenShock::Config::RFConfig rf;
@@ -16,6 +18,8 @@ namespace OpenShock::Config {
     OpenShock::Config::BackendConfig backend;
     OpenShock::Config::SerialInputConfig serialInput;
     OpenShock::Config::OtaUpdateConfig otaUpdate;
+
+    OpenShock::Config::ExtensionConfig extension;
 
     void ToDefault() override;
 

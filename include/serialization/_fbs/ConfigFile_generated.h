@@ -38,6 +38,9 @@ struct SerialInputConfigBuilder;
 struct OtaUpdateConfig;
 struct OtaUpdateConfigBuilder;
 
+struct ExtensionConfig;
+struct ExtensionConfigBuilder;
+
 struct Config;
 struct ConfigBuilder;
 
@@ -731,6 +734,67 @@ inline ::flatbuffers::Offset<OtaUpdateConfig> CreateOtaUpdateConfigDirect(
       update_step);
 }
 
+struct ExtensionConfig FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ExtensionConfigBuilder Builder;
+  struct Traits;
+  static FLATBUFFERS_CONSTEXPR_CPP11 const char *GetFullyQualifiedName() {
+    return "OpenShock.Serialization.Configuration.ExtensionConfig";
+  }
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PT_MODULES_CONFIG = 4
+  };
+  /// Plaintext json configuration for all extension modules
+  const ::flatbuffers::String *pt_modules_config() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PT_MODULES_CONFIG);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_PT_MODULES_CONFIG) &&
+           verifier.VerifyString(pt_modules_config()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ExtensionConfigBuilder {
+  typedef ExtensionConfig Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_pt_modules_config(::flatbuffers::Offset<::flatbuffers::String> pt_modules_config) {
+    fbb_.AddOffset(ExtensionConfig::VT_PT_MODULES_CONFIG, pt_modules_config);
+  }
+  explicit ExtensionConfigBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ExtensionConfig> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ExtensionConfig>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ExtensionConfig> CreateExtensionConfig(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> pt_modules_config = 0) {
+  ExtensionConfigBuilder builder_(_fbb);
+  builder_.add_pt_modules_config(pt_modules_config);
+  return builder_.Finish();
+}
+
+struct ExtensionConfig::Traits {
+  using type = ExtensionConfig;
+  static auto constexpr Create = CreateExtensionConfig;
+};
+
+inline ::flatbuffers::Offset<ExtensionConfig> CreateExtensionConfigDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *pt_modules_config = nullptr) {
+  auto pt_modules_config__ = pt_modules_config ? _fbb.CreateString(pt_modules_config) : 0;
+  return OpenShock::Serialization::Configuration::CreateExtensionConfig(
+      _fbb,
+      pt_modules_config__);
+}
+
 struct Config FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ConfigBuilder Builder;
   struct Traits;
@@ -743,7 +807,8 @@ struct Config FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CAPTIVE_PORTAL = 8,
     VT_BACKEND = 10,
     VT_SERIAL_INPUT = 12,
-    VT_OTA_UPDATE = 14
+    VT_OTA_UPDATE = 14,
+    VT_EXTENSION = 16
   };
   /// RF Transmitter configuration
   const OpenShock::Serialization::Configuration::RFConfig *rf() const {
@@ -769,6 +834,10 @@ struct Config FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const OpenShock::Serialization::Configuration::OtaUpdateConfig *ota_update() const {
     return GetPointer<const OpenShock::Serialization::Configuration::OtaUpdateConfig *>(VT_OTA_UPDATE);
   }
+  /// Extensions configuration
+  const OpenShock::Serialization::Configuration::ExtensionConfig *extension() const {
+    return GetPointer<const OpenShock::Serialization::Configuration::ExtensionConfig *>(VT_EXTENSION);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_RF) &&
@@ -783,6 +852,8 @@ struct Config FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(serial_input()) &&
            VerifyOffset(verifier, VT_OTA_UPDATE) &&
            verifier.VerifyTable(ota_update()) &&
+           VerifyOffset(verifier, VT_EXTENSION) &&
+           verifier.VerifyTable(extension()) &&
            verifier.EndTable();
   }
 };
@@ -809,6 +880,9 @@ struct ConfigBuilder {
   void add_ota_update(::flatbuffers::Offset<OpenShock::Serialization::Configuration::OtaUpdateConfig> ota_update) {
     fbb_.AddOffset(Config::VT_OTA_UPDATE, ota_update);
   }
+  void add_extension(::flatbuffers::Offset<OpenShock::Serialization::Configuration::ExtensionConfig> extension) {
+    fbb_.AddOffset(Config::VT_EXTENSION, extension);
+  }
   explicit ConfigBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -827,8 +901,10 @@ inline ::flatbuffers::Offset<Config> CreateConfig(
     ::flatbuffers::Offset<OpenShock::Serialization::Configuration::CaptivePortalConfig> captive_portal = 0,
     ::flatbuffers::Offset<OpenShock::Serialization::Configuration::BackendConfig> backend = 0,
     ::flatbuffers::Offset<OpenShock::Serialization::Configuration::SerialInputConfig> serial_input = 0,
-    ::flatbuffers::Offset<OpenShock::Serialization::Configuration::OtaUpdateConfig> ota_update = 0) {
+    ::flatbuffers::Offset<OpenShock::Serialization::Configuration::OtaUpdateConfig> ota_update = 0,
+    ::flatbuffers::Offset<OpenShock::Serialization::Configuration::ExtensionConfig> extension = 0) {
   ConfigBuilder builder_(_fbb);
+  builder_.add_extension(extension);
   builder_.add_ota_update(ota_update);
   builder_.add_serial_input(serial_input);
   builder_.add_backend(backend);
