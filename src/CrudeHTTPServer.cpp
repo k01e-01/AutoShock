@@ -93,7 +93,7 @@ void _handleClient(void* arg, AsyncClient* client) {
 
     CrudeHTTPServer::Response response = m_routes.at(hitIndex).cb(requestHeaders, requestBody, client);
 
-    ESP_LOGD(TAG, "%s", response.body.toString().c_str());
+    const std::string pleaseWork = response.body.toString();
 
     std::string tempStr;
 
@@ -129,15 +129,15 @@ void _handleClient(void* arg, AsyncClient* client) {
     if (resHasBody) {
       newTempStr = (
         _NEWLINE +
-        response.body.toString() +
+        pleaseWork +
         _NEWLINE
       );
 
       client->add(newTempStr.c_str(), newTempStr.length());
     }
 
-    ESP_LOGD(TAG, "%s", newTempStr.c_str());
-    ESP_LOGD(TAG, "%s", response.body.toString().c_str());
+    // ESP_LOGD(TAG, "%s", newTempStr.c_str());
+    // ESP_LOGD(TAG, "%s", response.body.toString().c_str());
 
     client->send();
     client->close();
