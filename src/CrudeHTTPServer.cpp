@@ -63,8 +63,6 @@ void _handleClient(void* arg, AsyncClient* client) {
       return;
     }
 
-
-
     std::string tempStr;
 
     tempStr = (
