@@ -63,6 +63,8 @@ void _handleClient(void* arg, AsyncClient* client) {
       return;
     }
 
+
+
     std::string tempStr;
 
     tempStr = (
@@ -128,7 +130,14 @@ bool CrudeHTTPServer::Stop() {
   return true;
 }
 
-void CrudeHTTPServer::On(const StringView& url, const StringView& method, RequestHandler cb) {
+bool CrudeHTTPServer::On(const StringView& url, const StringView& method, RequestHandler cb) {
   _Route newRoute { url, method, cb };
+
+  if (!_HTTP_CODES.count(method)) {
+    ESP_LOGE(TAG, "CrudeHTTPServer does not support http status code ", method);
+    return false;
+  }
+
   m_routes.push_back(newRoute);
+  return true;
 }

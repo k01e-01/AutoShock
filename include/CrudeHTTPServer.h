@@ -15,5 +15,5 @@ namespace OpenShock::CrudeHTTPServer {
   typedef std::function<Response(AsyncClient*)> RequestHandler;
   bool Start();
   bool Stop();
-  void On(const StringView& url, const StringView& method, RequestHandler cb);
+  bool On(const StringView& url, const StringView& method, RequestHandler cb);
 }
