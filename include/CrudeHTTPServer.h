@@ -12,7 +12,7 @@ namespace OpenShock::CrudeHTTPServer {
     std::vector<StringView> headers;
     StringView body;
   };
-  typedef std::function<Response(AsyncClient*)> RequestHandler;
+  typedef std::function<Response(std::vector<StringView>,StringView,AsyncClient*)> RequestHandler;
   bool Start();
   bool Stop();
   bool On(const StringView& url, const StringView& method, RequestHandler cb);

@@ -20,7 +20,9 @@ bool ExtensionManager::IsArmed() {
 bool ExtensionManager::Init() {
   ESP_LOGI(TAG, "Hello world from ExtensionManager!");
 
-  CrudeHTTPServer::On("/", "GET", [](AsyncClient* client){
+  CrudeHTTPServer::On("/", "POST", [](std::vector<StringView> headers, StringView body, AsyncClient* client){
+    ESP_LOGI(TAG, "%s", body.toString().c_str());
+
     return CrudeHTTPServer::Response {
       200,
       std::vector<StringView> {

@@ -24,7 +24,6 @@ struct _Route {
 std::vector<_Route> m_routes;
 
 const char* const _404 = "HTTP/1.1 404 Not Found\r\nServer: CrudeHTTPServer\r\nContent-Type: text/plain\r\nContent-Length: 17\r\n\r\n404 - Not Found\r\n";
-
 const char* const _NEWLINE = "\r\n";
 
 const std::unordered_map<uint16_t, std::string> _HTTP_CODES = {
@@ -46,22 +45,42 @@ void _handleClient(void* arg, AsyncClient* client) {
     std::vector<StringView> rqlines = request.split(_NEWLINE);
     std::vector<StringView> rqfirstline = rqlines.at(0).split(' ');
 
-    CrudeHTTPServer::Response response;
-    bool routeFound = false;
+    int hitIndex = -1;
 
     for (int i = 0; i < m_routes.size(); ++i) {
       if (rqfirstline.at(0) == m_routes.at(i).method && rqfirstline.at(1) == m_routes.at(i).url) {
-        response = m_routes.at(i).cb(client);
-        routeFound = true;
+        hitIndex = i;
         break;
       }
     }
 
-    if (!routeFound) {
+    if (hitIndex == -1) {
       client->write(_404);
       client->close();
       return;
     }
+
+    std::vector<StringView> requestHeaders;
+
+    for (int i = 1; i < rqlines.size(); ++i) {
+      if (rqlines.at(i).toString().c_str() == "") {
+        break;
+      }
+      requestHeaders.push_back(rqlines.at(i));
+    }
+
+    std::vector<StringView> rqparas = request.split("\r\n\r\n");
+    std::string rqbdystr = "";
+
+    if (rqparas.size() > 1) {
+      for (int i = 1; i < rqparas.size(); ++i) {
+        rqbdystr.append(rqparas.at(i).toString().c_str());
+      }
+    }
+
+    StringView requestBody = StringView(rqbdystr);
+
+    CrudeHTTPServer::Response response = m_routes.at(hitIndex).cb(requestHeaders, requestBody, client);
 
     std::string tempStr;
 
@@ -130,11 +149,6 @@ bool CrudeHTTPServer::Stop() {
 
 bool CrudeHTTPServer::On(const StringView& url, const StringView& method, RequestHandler cb) {
   _Route newRoute { url, method, cb };
-
-  if (!_HTTP_CODES.count(method)) {
-    ESP_LOGE(TAG, "CrudeHTTPServer does not support http status code ", method);
-    return false;
-  }
 
   m_routes.push_back(newRoute);
   return true;
