@@ -33,16 +33,16 @@ bool ExtensionManager::Init() {
   });
 
   CrudeHTTPServer::On("/config", "GET", [](std::vector<StringView> headers, StringView body, AsyncClient* client){
-    std::string tempStr;
-    Config::GetExtensionModulesConfig(tempStr);
-    ESP_LOGI(TAG, "%s", tempStr.c_str());
+    std::string config;
+    Config::GetExtensionModulesConfig(config);
+    ESP_LOGI(TAG, "%s", config.c_str());
 
     return CrudeHTTPServer::Response {
       200,
       std::vector<StringView> {
         "Content-Type: text/plain"
       },
-      tempStr
+      config
     };
   });
 

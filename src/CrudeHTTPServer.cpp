@@ -93,6 +93,8 @@ void _handleClient(void* arg, AsyncClient* client) {
 
     CrudeHTTPServer::Response response = m_routes.at(hitIndex).cb(requestHeaders, requestBody, client);
 
+    ESP_LOGD(TAG, "%s", response.body.toString().c_str());
+
     std::string tempStr;
 
     tempStr = (
@@ -102,8 +104,7 @@ void _handleClient(void* arg, AsyncClient* client) {
 
       "Server: CrudeHTTPServer" + _NEWLINE +
       "Sins-Committed: Many" + _NEWLINE +
-      "Access-Control-Allow-Origin: *" + _NEWLINE +
-      ""
+      "Access-Control-Allow-Origin: *" + _NEWLINE
     );
 
     client->add(tempStr.c_str(), tempStr.length());
@@ -111,7 +112,8 @@ void _handleClient(void* arg, AsyncClient* client) {
     bool resHasBody = response.body.length() > 0;
 
     if (resHasBody) {
-      tempStr = "Content-Length: " + std::to_string(response.body.length() + 2) + _NEWLINE;
+      int tempInt = response.body.toString().length() + 2;
+      tempStr = "Content-Length: " + std::to_string(tempInt) + _NEWLINE;
       client->add(tempStr.c_str(), tempStr.length());
     } else {
       client->add("Content-Length: 0\r\n", 20);
@@ -122,15 +124,20 @@ void _handleClient(void* arg, AsyncClient* client) {
       client->add(_NEWLINE, 2);
     }
 
+    std::string newTempStr;
+
     if (resHasBody) {
-      tempStr = (
+      newTempStr = (
         _NEWLINE +
         response.body.toString() +
         _NEWLINE
       );
 
-      client->add(tempStr.c_str(), tempStr.length());
+      client->add(newTempStr.c_str(), newTempStr.length());
     }
+
+    ESP_LOGD(TAG, "%s", newTempStr.c_str());
+    ESP_LOGD(TAG, "%s", response.body.toString().c_str());
 
     client->send();
     client->close();
