@@ -62,8 +62,15 @@ void _handleClient(void* arg, AsyncClient* client) {
 
     std::vector<StringView> requestHeaders;
 
+    uint32_t contentLength;
+
     for (int i = 1; i < rqlines.size(); ++i) {
-      if (rqlines.at(i).toString().c_str() == "") {
+      if (rqlines.at(i).beforeDelimiter(' ').toString() == "Content-Length:") {
+        contentLength = std::stoi(rqlines.at(i).afterDelimiter(' ').toString());
+        ESP_LOGI(TAG, "HIT");
+      }
+
+      if (rqlines.at(i).length() == 0) {
         break;
       }
       requestHeaders.push_back(rqlines.at(i));
@@ -76,6 +83,10 @@ void _handleClient(void* arg, AsyncClient* client) {
       for (int i = 1; i < rqparas.size(); ++i) {
         rqbdystr.append(rqparas.at(i).toString().c_str());
       }
+    }
+
+    if (rqbdystr.length() > contentLength) {
+      rqbdystr = rqbdystr.substr(0, contentLength);
     }
 
     StringView requestBody = StringView(rqbdystr);

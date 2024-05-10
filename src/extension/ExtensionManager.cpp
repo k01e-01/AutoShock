@@ -32,6 +32,31 @@ bool ExtensionManager::Init() {
     };
   });
 
+  CrudeHTTPServer::On("/config", "GET", [](std::vector<StringView> headers, StringView body, AsyncClient* client){
+    std::string tempStr;
+    Config::GetExtensionModulesConfig(tempStr);
+    ESP_LOGI(TAG, "%s", tempStr.c_str());
+
+    return CrudeHTTPServer::Response {
+      200,
+      std::vector<StringView> {
+        "Content-Type: text/plain"
+      },
+      tempStr
+    };
+  });
+
+  CrudeHTTPServer::On("/config", "POST", [](std::vector<StringView> headers, StringView body, AsyncClient* client){
+    Config::SetExtensionModulesConfig(body);
+    ESP_LOGI(TAG, "%s", body.toString().c_str());
+
+    return CrudeHTTPServer::Response {
+      200,
+      std::vector<StringView> {},
+      body
+    };
+  });
+
   CrudeHTTPServer::Start();
 
   return true;
