@@ -1,7 +1,7 @@
 #include <extension/ExtensionManager.h>
 
 #include <Logging.h>
-#include <CrudeHTTPServer.h>
+#include <http/CrudeHTTPServer.h>
 #include <config/Config.h>
 
 #include <cstring>
