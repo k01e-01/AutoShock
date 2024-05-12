@@ -101,8 +101,8 @@ table OtaUpdateConfig {
 }
 
 table ExtensionConfig {
-  /// Plaintext json configuration for all extension modules
-  pt_modules_config:string;
+  /// Plaintext json configuration for all extensions
+  pt_extensions_config:string;
 }
 
 table Config {

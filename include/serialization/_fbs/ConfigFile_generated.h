@@ -741,16 +741,16 @@ struct ExtensionConfig FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return "OpenShock.Serialization.Configuration.ExtensionConfig";
   }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_PT_MODULES_CONFIG = 4
+    VT_PT_EXTENSIONS_CONFIG = 4
   };
-  /// Plaintext json configuration for all extension modules
-  const ::flatbuffers::String *pt_modules_config() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PT_MODULES_CONFIG);
+  /// Plaintext json configuration for all extensions
+  const ::flatbuffers::String *pt_extensions_config() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PT_EXTENSIONS_CONFIG);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_PT_MODULES_CONFIG) &&
-           verifier.VerifyString(pt_modules_config()) &&
+           VerifyOffset(verifier, VT_PT_EXTENSIONS_CONFIG) &&
+           verifier.VerifyString(pt_extensions_config()) &&
            verifier.EndTable();
   }
 };
@@ -759,8 +759,8 @@ struct ExtensionConfigBuilder {
   typedef ExtensionConfig Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_pt_modules_config(::flatbuffers::Offset<::flatbuffers::String> pt_modules_config) {
-    fbb_.AddOffset(ExtensionConfig::VT_PT_MODULES_CONFIG, pt_modules_config);
+  void add_pt_extensions_config(::flatbuffers::Offset<::flatbuffers::String> pt_extensions_config) {
+    fbb_.AddOffset(ExtensionConfig::VT_PT_EXTENSIONS_CONFIG, pt_extensions_config);
   }
   explicit ExtensionConfigBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -775,9 +775,9 @@ struct ExtensionConfigBuilder {
 
 inline ::flatbuffers::Offset<ExtensionConfig> CreateExtensionConfig(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> pt_modules_config = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> pt_extensions_config = 0) {
   ExtensionConfigBuilder builder_(_fbb);
-  builder_.add_pt_modules_config(pt_modules_config);
+  builder_.add_pt_extensions_config(pt_extensions_config);
   return builder_.Finish();
 }
 
@@ -788,11 +788,11 @@ struct ExtensionConfig::Traits {
 
 inline ::flatbuffers::Offset<ExtensionConfig> CreateExtensionConfigDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *pt_modules_config = nullptr) {
-  auto pt_modules_config__ = pt_modules_config ? _fbb.CreateString(pt_modules_config) : 0;
+    const char *pt_extensions_config = nullptr) {
+  auto pt_extensions_config__ = pt_extensions_config ? _fbb.CreateString(pt_extensions_config) : 0;
   return OpenShock::Serialization::Configuration::CreateExtensionConfig(
       _fbb,
-      pt_modules_config__);
+      pt_extensions_config__);
 }
 
 struct Config FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

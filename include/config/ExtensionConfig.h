@@ -8,9 +8,9 @@
 namespace OpenShock::Config {
   struct ExtensionConfig : public ConfigBase<Serialization::Configuration::ExtensionConfig> {
     ExtensionConfig();
-    ExtensionConfig(StringView ptModulesConfig);
+    ExtensionConfig(StringView ptExtensionsConfig);
 
-    std::string ptModulesConfig;
+    std::string ptExtensionsConfig;
 
     void ToDefault() override;
 

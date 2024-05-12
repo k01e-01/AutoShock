@@ -23,11 +23,11 @@ static getSizePrefixedRootAsExtensionConfig(bb:flatbuffers.ByteBuffer, obj?:Exte
 }
 
 /**
- * Plaintext json configuration for all extension modules
+ * Plaintext json configuration for all extensions
  */
-ptModulesConfig():string|null
-ptModulesConfig(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ptModulesConfig(optionalEncoding?:any):string|Uint8Array|null {
+ptExtensionsConfig():string|null
+ptExtensionsConfig(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ptExtensionsConfig(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -36,8 +36,8 @@ static startExtensionConfig(builder:flatbuffers.Builder) {
   builder.startObject(1);
 }
 
-static addPtModulesConfig(builder:flatbuffers.Builder, ptModulesConfigOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, ptModulesConfigOffset, 0);
+static addPtExtensionsConfig(builder:flatbuffers.Builder, ptExtensionsConfigOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, ptExtensionsConfigOffset, 0);
 }
 
 static endExtensionConfig(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -45,9 +45,9 @@ static endExtensionConfig(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createExtensionConfig(builder:flatbuffers.Builder, ptModulesConfigOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createExtensionConfig(builder:flatbuffers.Builder, ptExtensionsConfigOffset:flatbuffers.Offset):flatbuffers.Offset {
   ExtensionConfig.startExtensionConfig(builder);
-  ExtensionConfig.addPtModulesConfig(builder, ptModulesConfigOffset);
+  ExtensionConfig.addPtExtensionsConfig(builder, ptExtensionsConfigOffset);
   return ExtensionConfig.endExtensionConfig(builder);
 }
 }

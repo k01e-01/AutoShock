@@ -82,6 +82,6 @@ namespace OpenShock::Config {
   bool SetBackendLCGOverride(StringView lcgOverride);
   bool ClearBackendLCGOverride();
 
-  bool GetExtensionModulesConfig(std::string& out);
-  bool SetExtensionModulesConfig(StringView config);
+  bool GetExtensionExtensionsConfig(std::string& out);
+  bool SetExtensionExtensionsConfig(StringView config);
 }  // namespace OpenShock::Config

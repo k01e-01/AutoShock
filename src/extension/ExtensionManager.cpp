@@ -34,7 +34,7 @@ bool ExtensionManager::Init() {
 
   CrudeHTTPServer::On("/config", "GET", [](std::vector<StringView> headers, StringView body, AsyncClient* client){
     std::string config;
-    Config::GetExtensionModulesConfig(config);
+    Config::GetExtensionExtensionsConfig(config);
     ESP_LOGI(TAG, "%s", config.c_str());
 
     return CrudeHTTPServer::Response {
@@ -47,7 +47,7 @@ bool ExtensionManager::Init() {
   });
 
   CrudeHTTPServer::On("/config", "POST", [](std::vector<StringView> headers, StringView body, AsyncClient* client){
-    Config::SetExtensionModulesConfig(body);
+    Config::SetExtensionExtensionsConfig(body);
     ESP_LOGI(TAG, "%s", body.toString().c_str());
 
     return CrudeHTTPServer::Response {

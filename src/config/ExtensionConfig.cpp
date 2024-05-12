@@ -7,12 +7,12 @@ const char* const TAG = "Config::ExtensionConfig";
 
 using namespace OpenShock::Config;
 
-ExtensionConfig::ExtensionConfig() : ptModulesConfig() { }
+ExtensionConfig::ExtensionConfig() : ptExtensionsConfig() { }
 
-ExtensionConfig::ExtensionConfig(StringView ptModulesConfig) : ptModulesConfig(ptModulesConfig.toString()) { }
+ExtensionConfig::ExtensionConfig(StringView ptExtensionsConfig) : ptExtensionsConfig(ptExtensionsConfig.toString()) { }
 
 void ExtensionConfig::ToDefault() {
-  ptModulesConfig.clear();
+  ptExtensionsConfig.clear();
 }
 
 bool ExtensionConfig::FromFlatbuffers(const Serialization::Configuration::ExtensionConfig* config) {
@@ -21,15 +21,15 @@ bool ExtensionConfig::FromFlatbuffers(const Serialization::Configuration::Extens
     return false;
   }
 
-  Internal::Utils::FromFbsStr(ptModulesConfig, config->pt_modules_config(), "");
+  Internal::Utils::FromFbsStr(ptExtensionsConfig, config->pt_extensions_config(), "");
 
   return true;
 }
 
 flatbuffers::Offset<OpenShock::Serialization::Configuration::ExtensionConfig> ExtensionConfig::ToFlatbuffers(flatbuffers::FlatBufferBuilder& builder, bool withSensitiveData) const {
-  auto ptModulesConfigOffset = builder.CreateString(ptModulesConfig);
+  auto ptExtensionsConfigOffset = builder.CreateString(ptExtensionsConfig);
 
-  return Serialization::Configuration::CreateExtensionConfig(builder, ptModulesConfigOffset);
+  return Serialization::Configuration::CreateExtensionConfig(builder, ptExtensionsConfigOffset);
 }
 
 bool ExtensionConfig::FromJSON(const cJSON* json) {
@@ -43,7 +43,7 @@ bool ExtensionConfig::FromJSON(const cJSON* json) {
     return false;
   }
 
-  Internal::Utils::FromJsonStr(ptModulesConfig, json, "ptModulesConfig", "");
+  Internal::Utils::FromJsonStr(ptExtensionsConfig, json, "ptExtensionsConfig", "");
 
   return true;
 }
@@ -51,7 +51,7 @@ bool ExtensionConfig::FromJSON(const cJSON* json) {
 cJSON* ExtensionConfig::ToJSON(bool withSensitive) const {
   cJSON* root = cJSON_CreateObject();
 
-  cJSON_AddStringToObject(root, "ptModulesConfig", ptModulesConfig.c_str());
+  cJSON_AddStringToObject(root, "ptExtensionsConfig", ptExtensionsConfig.c_str());
 
   return root;
 }
