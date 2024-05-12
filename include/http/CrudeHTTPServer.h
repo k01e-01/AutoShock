@@ -16,4 +16,4 @@ namespace OpenShock::CrudeHTTPServer {
   bool Start();
   bool Stop();
   bool On(const StringView& url, const StringView& method, RequestHandler cb);
-}
+} // namespace OpenShock::CrudeHTTPServer
